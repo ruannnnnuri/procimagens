@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="../resources/css/procimagens.css">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="container">
+			<section class="secaoControles">
+				<div class="images">
+					<div class="img1">
+						<h3>Imagem 1</h3>
+						<label class="btn" for="fileInput1">Escolher arquivo</label>
+						<input type="file" class="carregarImagem" id="fileInput1" style="display:none">
+						<canvas class="preview" id="img1Preview"></canvas>
+					</div>
+					<div class="img2">
+						<h3>Imagem 2</h3>
+						<label class="btn" for="fileInput2">Escolher arquivo</label>
+						<input type="file" class="carregarImagem" id="fileInput2" style="display:none">
+						<canvas class="preview" id="img2Preview"></canvas>
+					</div>
+				</div>
+
+				<div class="op">
+					<div class="botoesOp">
+						<h3>Técnicas Aritméticas</h3>
+						<div>
+							<input type="checkbox" id="checkConstante">
+							<label>Usar segunda imagem</label>
+						</div>
+						<div>
+							<input type="number" id="constante" style="width: 60px;" min="0" max="255">
+							<label>Valor constante</label>
+						</div>
+						<button class="btn" id="adicao">Adição</button>
+						<button class="btn" id="subtracao">Subtração</button>
+						<button class="btn" id="multiplicacao">Multiplicação</button>
+						<button class="btn" id="divisao">Divisão</button>
+					</div>
+					<div class="botoesOp">
+						<h3>Conversão / Inversão</h3>
+						<button class="btn" id="converterCinza">RGB -> Cinza</button>
+						<button class="btn" id="invHorizontal">Inv. Horizontal</button>
+						<button class="btn" id="invVertical">Inv. Vertical</button>
+						<button class="btn" id="girar180">Girar 180º</button>
+					</div>
+					<div class="botoesOp">
+						<h3>Outros</h3>
+						<button class="btn" id="diferenca">Diferença</button>
+					</div>
+				</div>
+			</section>
+
+			<section class="secaoResultado">
+				<div class="resultImg">
+					<h3>Resultado</h3>
+					<canvas class="preview" id="resultPreview"></canvas>
+				</div>
+			</section>
+
+		</div>
+	</body>
+	<script src="../resources/js/procimagens.js"></script>
+</html>
+
