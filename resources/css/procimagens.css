@@ -20,7 +20,7 @@ h3{
 
 .images {
 	width: auto;
-	height: 370px;
+	height: 320px;
 	display: flex;
 	gap: 20px;
 	justify-content: center;
@@ -30,7 +30,7 @@ h3{
 
 .secaoResultado {
 	width: 280px;
-	height: 370px;
+	height: 320px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -40,7 +40,7 @@ h3{
 
 .resultImg {
 	width: auto;
-	height: 370px;
+	height: 320px;
 }
 		
 .images .img1, .img2 {

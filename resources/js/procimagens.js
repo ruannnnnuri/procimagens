@@ -8,6 +8,9 @@ const invHorizontal = document.getElementById('invHorizontal');
 const invVertical = document.getElementById('invVertical');
 const girar180 = document.getElementById('girar180');
 const diferenca = document.getElementById('diferenca');
+const blending = document.getElementById('blending');
+const media = document.getElementById('media');
+const limiarizacao = document.getElementById('limiarizacao');
 
 /*-----------------------------------ADICAO---------------------------------------*/
 adicao.addEventListener ('click', function() {
@@ -26,7 +29,6 @@ adicao.addEventListener ('click', function() {
     const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixels2 = imageData2.data;
     const pixelsResult = imageDataResult.data;
@@ -76,7 +78,6 @@ subtracao.addEventListener ('click', function() {
     const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixels2 = imageData2.data;
     const pixelsResult = imageDataResult.data;
@@ -123,7 +124,6 @@ multiplicacao.addEventListener ('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
@@ -157,7 +157,6 @@ divisao.addEventListener ('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
@@ -191,7 +190,6 @@ converterCinza.addEventListener('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
     
@@ -224,7 +222,6 @@ invHorizontal.addEventListener('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
     
@@ -262,7 +259,6 @@ invVertical.addEventListener('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
     
@@ -300,7 +296,6 @@ girar180.addEventListener('click', function() {
     const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
     
@@ -336,7 +331,6 @@ diferenca.addEventListener ('click', function() {
     const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
     const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
     
-    // Este é o array com os valores RGBA
     const pixels1 = imageData1.data;
     const pixels2 = imageData2.data;
     const pixelsResult = imageDataResult.data;
@@ -358,6 +352,131 @@ diferenca.addEventListener ('click', function() {
         pixelsResult[i]   = Math.min(aux1r + aux2r, 255);
         pixelsResult[i+1] = Math.min(aux1g + aux2g, 255);
         pixelsResult[i+2] = Math.min(aux1b + aux2b, 255);
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*--------------------------------BLENDING-------------------------------------*/
+
+blending.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvas2 = document.getElementById('img2Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixels2 = imageData2.data;
+    const pixelsResult = imageDataResult.data;
+
+    if (canvas1.width !== canvas2.width || canvas1.height !== canvas2.height) {
+        alert('As imagens precisam ter as mesmas dimensões!');
+        return;
+    }
+
+    const fator = Number(document.getElementById('blendfactor').value);
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        pixelsResult[i] = Math.min((fator/100) * pixels1[i] + (1-(fator/100)) * pixels2[i], 255);
+        pixelsResult[i+1] = Math.min((fator/100) * pixels1[i+1] + (1-(fator/100)) * pixels2[i+1], 255);
+        pixelsResult[i+2] = Math.min((fator/100) * pixels1[i+2] + (1-(fator/100)) * pixels2[i+2], 255);
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*----------------------------------MEDIA---------------------------------------*/
+
+media.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvas2 = document.getElementById('img2Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixels2 = imageData2.data;
+    const pixelsResult = imageDataResult.data;
+
+    if (canvas1.width !== canvas2.width || canvas1.height !== canvas2.height) {
+        alert('As imagens precisam ter as mesmas dimensões!');
+        return;
+    }
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        pixelsResult[i] = Math.min((pixels1[i] + pixels2[i]), 255) / 2;
+        pixelsResult[i+1] = Math.min((pixels1[i+1] + pixels2[i+1]), 255) / 2;
+        pixelsResult[i+2] = Math.min((pixels1[i+2] + pixels2[i+2]), 255) / 2;
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-------------------------------LIMIARIZACAO------------------------------------*/
+
+limiarizacao.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const cinza = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        let limiar;
+
+        if(cinza >= 128){
+            limiar = 255;
+        }else{
+            limiar = 0;
+        }
+
+        pixelsResult[i] = limiar;
+        pixelsResult[i+1] = limiar;
+        pixelsResult[i+2] = limiar;
         pixelsResult[i+3] = 255;
     }
     
@@ -409,31 +528,41 @@ carregarImagens.forEach(input => {
 
 /*-----------------------------------OUTROS---------------------------------------*/
 const constante = document.getElementById('constante');
+const blendfactor = document.getElementById('blendfactor');
 
-function ajustarValor() {
-    let valor = parseFloat(constante.value);
-    const min = parseFloat(constante.min) || 0;
-    const max = parseFloat(constante.max) || 255;
+function ajustarValor(a) {
+    let valor = parseFloat(a.value);
+    const min = parseFloat(a.min);
+    const max = parseFloat(a.max);
     
     if (isNaN(valor)) {
-        constante.value = min;
+        a.value = min;
     } else if (valor < min) {
-        constante.value = min;
+        a.value = min;
     } else if (valor > max) {
-        constante.value = max;
+        a.value = max;
     }
+
+    return a;
 }
 
-// Quando clicar fora
-constante.addEventListener('blur', ajustarValor);
+// Atualiza valor quando clicar fora
+constante.addEventListener('blur', ajustarValor(constante));
+blendfactor.addEventListener('blur', ajustarValor(blendfactor));
 
-// Quando apertar Enter
+// Atualiza valor quando apertar Enter
 constante.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-        ajustarValor();
+        ajustarValor(constante);
+    }
+});
+blendfactor.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        ajustarValor(blendfactor);
     }
 });
 
+// Desativar botões de multiplicação e divisão
 checkConstante.addEventListener('change', function() {
     multiplicacao.disabled = this.checked;
     divisao.disabled = this.checked;
