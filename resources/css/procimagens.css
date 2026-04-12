@@ -19,7 +19,7 @@ h3{
 }
 
 .images {
-	width: auto;
+	width: 600px;
 	height: 320px;
 	display: flex;
 	gap: 20px;
@@ -51,8 +51,8 @@ h3{
 }
 		
 .preview{
-	max-width: 250px;
-	max-height: 250px;
+	max-width: 280px;
+	max-height: 230px;
 	margin-top: 10px;
 	border: 1px solid #ccc;
 }

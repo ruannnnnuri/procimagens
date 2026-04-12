@@ -11,6 +11,12 @@ const diferenca = document.getElementById('diferenca');
 const blending = document.getElementById('blending');
 const media = document.getElementById('media');
 const limiarizacao = document.getElementById('limiarizacao');
+const logicand = document.getElementById('logicand');
+const logicor = document.getElementById('logicor');
+const logicnot = document.getElementById('logicnot');
+const logicxor = document.getElementById('logicxor');
+const negativo = document.getElementById('negativo');
+const equalizacao = document.getElementById('equalizacao');
 
 /*-----------------------------------ADICAO---------------------------------------*/
 adicao.addEventListener ('click', function() {
@@ -487,6 +493,312 @@ limiarizacao.addEventListener ('click', function() {
     canvasResult.style.height = 'auto';
 });
 
+/*-----------------------------------NOT----------------------------------------*/
+
+logicnot.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const cinza = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        let limiar;
+
+        if(cinza >= 128){
+            limiar = 1;
+        }else{
+            limiar = 0;
+        }
+        const resultado = (!limiar) *255;
+
+        pixelsResult[i] = resultado;
+        pixelsResult[i+1] = resultado;
+        pixelsResult[i+2] = resultado;
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-----------------------------------AND----------------------------------------*/
+
+logicand.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvas2 = document.getElementById('img2Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixels2 = imageData2.data;
+    const pixelsResult = imageDataResult.data;
+
+    if (canvas1.width !== canvas2.width || canvas1.height !== canvas2.height) {
+        alert('As imagens precisam ter as mesmas dimensões!');
+        return;
+    }
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const cinza1 = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        const cinza2 = Math.floor((pixels2[i]+pixels2[i+1]+pixels2[i+2]) / 3);
+        let limiar1;
+        let limiar2;
+
+        if(cinza1 >= 128){
+            limiar1 = 1;
+        }else{
+            limiar1 = 0;
+        }
+        if(cinza2 >= 128){
+            limiar2 = 1;
+        }else{
+            limiar2 = 0;
+        }
+        const resultado = (limiar1 && limiar2) *255;
+
+        pixelsResult[i] = resultado;
+        pixelsResult[i+1] = resultado;
+        pixelsResult[i+2] = resultado;
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-----------------------------------OR----------------------------------------*/
+
+logicor.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvas2 = document.getElementById('img2Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixels2 = imageData2.data;
+    const pixelsResult = imageDataResult.data;
+
+    if (canvas1.width !== canvas2.width || canvas1.height !== canvas2.height) {
+        alert('As imagens precisam ter as mesmas dimensões!');
+        return;
+    }
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const cinza1 = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        const cinza2 = Math.floor((pixels2[i]+pixels2[i+1]+pixels2[i+2]) / 3);
+        let limiar1;
+        let limiar2;
+
+        if(cinza1 >= 128){
+            limiar1 = 1;
+        }else{
+            limiar1 = 0;
+        }
+        if(cinza2 >= 128){
+            limiar2 = 1;
+        }else{
+            limiar2 = 0;
+        }
+        const resultado = (limiar1 || limiar2) *255;
+
+        pixelsResult[i] = resultado;
+        pixelsResult[i+1] = resultado;
+        pixelsResult[i+2] = resultado;
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-----------------------------------XOR----------------------------------------*/
+
+logicxor.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvas2 = document.getElementById('img2Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageData2 = ctx2.getImageData(0, 0, canvas2.width, canvas2.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixels2 = imageData2.data;
+    const pixelsResult = imageDataResult.data;
+
+    if (canvas1.width !== canvas2.width || canvas1.height !== canvas2.height) {
+        alert('As imagens precisam ter as mesmas dimensões!');
+        return;
+    }
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const cinza1 = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        const cinza2 = Math.floor((pixels2[i]+pixels2[i+1]+pixels2[i+2]) / 3);
+        let limiar1;
+        let limiar2;
+
+        if(cinza1 >= 128){
+            limiar1 = 1;
+        }else{
+            limiar1 = 0;
+        }
+        if(cinza2 >= 128){
+            limiar2 = 1;
+        }else{
+            limiar2 = 0;
+        }
+        const resultado = (limiar1 && !limiar2 || !limiar1 && limiar2) *255;
+
+        pixelsResult[i] = resultado;
+        pixelsResult[i+1] = resultado;
+        pixelsResult[i+2] = resultado;
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*--------------------------------NEGATIVO-------------------------------------*/
+
+negativo.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        pixelsResult[i] = 255 - pixels1[i];
+        pixelsResult[i+1] = 255 - pixels1[i+1];
+        pixelsResult[i+2] = 255 - pixels1[i+2];
+        pixelsResult[i+3] = 255;
+    }
+    
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '200px';
+    canvasResult.style.height = 'auto';
+});
+
+/*------------------------------EQUALIZACAO-----------------------------------*/
+
+equalizacao.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    let histograma = new Array(256).fill(0);
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        histograma[pixels1[i]]++;
+    }
+
+    let cfd = new Array(256);
+    let cfdmin = 50000;
+
+    for (let i=0; i<256; i++) {
+        if(i==0){
+            cfd[i] = histograma[i];
+        }else{
+            cfd[i] = cfd[i-1] + histograma[i];
+        }
+
+        if(cfd[i]<cfdmin){
+            cfdmin = cfd[i];
+        }
+    }
+
+    let h = new Array(256);
+
+    for (let i=0; i<256; i++) {
+        h[i] = Math.floor(((cfd[i] - cfdmin) / ((canvas1.width * canvas1.height) - cfdmin)) * (256-1)); 
+    }
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        pixelsResult[i] = h[pixels1[i]];
+        pixelsResult[i+1] = h[pixels1[i]];
+        pixelsResult[i+2] = h[pixels1[i]];
+        pixelsResult[i+3] = 255;
+    }
+
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
 /*-----------------------------------UPLOAD---------------------------------------*/
 const carregarImagens = document.querySelectorAll('.carregarImagem');
 
@@ -508,7 +820,7 @@ function uploadImage(input, canvas) {
             canvas.width = img.width;
             canvas.height = img.height;
             canvas.style.width = '100%';
-            canvas.style.maxWidth = '200px';
+            canvas.style.maxWidth = '280px';
             canvas.style.height = 'auto';
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0);
