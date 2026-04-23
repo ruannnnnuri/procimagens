@@ -759,6 +759,14 @@ equalizacao.addEventListener ('click', function() {
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
+    for (let i=0; i<pixels1.length; i+=4) {
+        const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        pixels1[i] = convercao;
+        pixels1[i+1] = convercao;
+        pixels1[i+2] = convercao;
+        pixels1[i+3] = 255;
+    }
+
     let histograma = new Array(256).fill(0);
 
     for (let i=0; i<pixels1.length; i+=4) {
