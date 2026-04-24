@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div class="container">
-			<section class="secaoControles">
+			<section class="secaoImagens">
 				<div class="images">
 					<div class="img1">
 						<h3>Imagem 1</h3>
@@ -24,7 +24,14 @@
 						<canvas class="preview" id="img2Preview"></canvas>
 					</div>
 				</div>
-
+				</section>
+				<section class="secaoResultado">
+					<div class="resultImg">
+						<h3>Resultado</h3>
+						<canvas class="preview" id="resultPreview"></canvas>
+					</div>
+				</section>
+				<section class="secaoControles">
 				<div class="op">
 					<div class="botoesOp">
 						<h3>Técnicas Aritméticas</h3>
@@ -68,14 +75,13 @@
 						<button class="btn" id="negativo">Negativo</button>
 						<button class="btn" id="equalizacao">Equalização</button>
 					</div>
+					<div class="botoesOp">
+						<h3>Filtros de Realce</h3>
+						<button class="btn" id="realceMax">MAX</button>
+						<button class="btn" id="realceMin">MIN</button>
+						<button class="btn" id="realceMean">MEAN</button>
+					</div>
 					
-				</div>
-			</section>
-
-			<section class="secaoResultado">
-				<div class="resultImg">
-					<h3>Resultado</h3>
-					<canvas class="preview" id="resultPreview"></canvas>
 				</div>
 			</section>
 

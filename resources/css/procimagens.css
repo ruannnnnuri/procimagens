@@ -4,6 +4,7 @@ body{
 	font-family: "Comfortaa";
 	font-size: 13px;
 	text-align: center;
+	box-sizing: border-box;
 }
 
 h3{
@@ -15,6 +16,7 @@ h3{
 	flex-direction: row;
 	justify-content: space-between;
 	box-sizing: border-box;
+	flex-wrap: wrap;
 	padding: 20px 50px;
 }
 
