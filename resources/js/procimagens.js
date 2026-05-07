@@ -941,7 +941,7 @@ realceMin.addEventListener ('click', function() {
     canvasResult.style.height = 'auto';
 });
 
-/*------------------------------REALCE MAX-----------------------------------*/
+/*------------------------------REALCE MEDIA-----------------------------------*/
 realceMean.addEventListener ('click', function() {
     const canvas1 = document.getElementById('img1Preview');
     const canvasResult = document.getElementById('resultPreview');
@@ -957,8 +957,6 @@ realceMean.addEventListener ('click', function() {
     
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
-
-    console.log(pixels1);
 
     for (let linha=0; linha<(canvas1.height); linha++) {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
@@ -1007,6 +1005,110 @@ realceMean.addEventListener ('click', function() {
     canvasResult.style.maxWidth = '280px';
     canvasResult.style.height = 'auto';
 });
+
+/*------------------------------REALCE MEDIA-----------------------------------*/
+realceMediana.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+
+            if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                const listaR = [
+                    pixels1[idx], pixels1[cima], pixels1[baixo], pixels1[esquerda], pixels1[direita],
+                    pixels1[cimaEsq], pixels1[cimaDir], pixels1[baixoEsq], pixels1[baixoDir]
+                ].sort((a, b) => a - b);
+
+                const listaG = [
+                    pixels1[idx], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                    pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
+                ].sort((a, b) => a - b);
+
+                const listaB = [
+                    pixels1[idx], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                    pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
+                ].sort((a, b) => a - b);
+
+                pixelsResult[idx] = listaR[4];
+                pixelsResult[idx+1] = listaG[4];
+                pixelsResult[idx+2] = listaB[4];
+            }
+            pixelsResult[idx+3] = 255;
+        }
+    }
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+            const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+            const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+            const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+            const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+            const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+            const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+            const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+            const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+            if(coluna === 0 && linha === 0){
+                pixelsResult[idx] = pixelsResult[baixoDir];
+                pixelsResult[idx+1] = pixelsResult[baixoDir+1];
+                pixelsResult[idx+2] = pixelsResult[baixoDir+2];
+            }else if(coluna === 0 && linha === canvas1.height-1){
+                pixelsResult[idx] = pixelsResult[cimaDir];
+                pixelsResult[idx+1] = pixelsResult[cimaDir+1];
+                pixelsResult[idx+2] = pixelsResult[cimaDir+2];
+            }else if(coluna === canvas1.width-1 && linha === 0){
+                pixelsResult[idx] = pixelsResult[baixoEsq];
+                pixelsResult[idx+1] = pixelsResult[baixoEsq+1];
+                pixelsResult[idx+2] = pixelsResult[baixoEsq+2];
+            }else if(coluna === 0){
+                pixelsResult[idx] = pixelsResult[direita];
+                pixelsResult[idx+1] = pixelsResult[direita+1];
+                pixelsResult[idx+2] = pixelsResult[direita+2];
+            }else if(linha === 0){
+                pixelsResult[idx] = pixelsResult[baixo];
+                pixelsResult[idx+1] = pixelsResult[baixo+1];
+                pixelsResult[idx+2] = pixelsResult[baixo+2];
+            }else if(coluna === canvas1.width - 1){
+                pixelsResult[idx] = pixelsResult[esquerda];
+                pixelsResult[idx+1] = pixelsResult[esquerda+1];
+                pixelsResult[idx+2] = pixelsResult[esquerda+2];
+            }else if(linha === canvas1.height - 1){
+                pixelsResult[idx] = pixelsResult[cima];
+                pixelsResult[idx+1] = pixelsResult[cima+1];
+                pixelsResult[idx+2] = pixelsResult[cima+2];
+            }
+        }
+    }
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
+
 /*-----------------------------------UPLOAD---------------------------------------*/
 const carregarImagens = document.querySelectorAll('.carregarImagem');
 
