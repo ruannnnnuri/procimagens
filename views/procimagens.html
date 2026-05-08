@@ -25,14 +25,37 @@
 					</div>
 				</div>
 				</section>
+				<section class="op">
+					<div class="botoesUp">
+						<h3>Filtros Passa-Baixa</h3>
+						<div class="selectWrapper">
+							<select>
+								<option>3X3</option>
+								<option>5X5</option>
+								<option>7X7</option>
+							</select>
+							<label>Kernel</label>
+						</div>
+						<button class="btn" id="realceMax">MAX</button>
+						<button class="btn" id="realceMin">MIN</button>
+						<button class="btn" id="realceMean">MEDIA</button>
+						<button class="btn" id="mediana">MEDIANA</button>
+						<div>
+							<input type="number" id="posicaoOrdem" style="width: 60px;" min="0" max="8">
+							<label>Posição Ordem</label>
+						</div>
+						<button class="btn" id="ordem">ORDEM</button>
+						<button class="btn" id="suavConserv">SUAVIZACAO</button>
+						<button class="btn" id="gaussiano">GAUSSIANO</button>
+					</div>
+				</section>
 				<section class="secaoResultado">
 					<div class="resultImg">
 						<h3>Resultado</h3>
 						<canvas class="preview" id="resultPreview"></canvas>
 					</div>
 				</section>
-				<section class="secaoControles">
-				<div class="op">
+				<section class="op">
 					<div class="botoesOp">
 						<h3>Técnicas Aritméticas</h3>
 						<div>
@@ -75,29 +98,9 @@
 						<button class="btn" id="negativo">Negativo</button>
 						<button class="btn" id="equalizacao">Equalização</button>
 					</div>
-					<div class="botoesOp">
-						<h3>Filtros de Realce</h3>
-						<div class="selectWrapper">
-							<select>
-								<option>3X3</option>
-								<option>5X5</option>
-								<option>7X7</option>
-							</select>
-							<label>Kernel</label>
-						</div>
-						<button class="btn" id="realceMax">MAX</button>
-						<button class="btn" id="realceMin">MIN</button>
-						<button class="btn" id="realceMean">MEDIA</button>
-						<button class="btn" id="realceMediana">MEDIANA</button>
-						<div>
-							<input type="number" id="blendfactor" style="width: 60px;" min="0" max="8">
-							<label>Posição Ordem</label>
-						</div>
-						<button class="btn" id="realceOrdem">ORDEM</button>
-					</div>
 					
-				</div>
-			</section>
+					
+				</section>
 
 		</div>
 	</body>
