@@ -837,6 +837,8 @@ realceMax.addEventListener ('click', function() {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
             const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
             const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
@@ -898,6 +900,8 @@ realceMin.addEventListener ('click', function() {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
             const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
             const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
@@ -959,6 +963,8 @@ realceMean.addEventListener ('click', function() {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
             const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
             const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
@@ -1020,6 +1026,8 @@ mediana.addEventListener ('click', function() {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
                 const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
                 const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
@@ -1085,6 +1093,8 @@ ordem.addEventListener ('click', function() {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
                 const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
                 const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
@@ -1127,7 +1137,7 @@ ordem.addEventListener ('click', function() {
     canvasResult.style.height = 'auto';
 });
 
-/*------------------------------ORDEM-----------------------------------*/
+/*------------------------------SUAVIZAÇÃO CONSERVATIVA-----------------------------------*/
 suavConserv.addEventListener ('click', function() {
     const canvas1 = document.getElementById('img1Preview');
     const canvasResult = document.getElementById('resultPreview');
@@ -1144,12 +1154,12 @@ suavConserv.addEventListener ('click', function() {
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
-    const posicaoOrdem = Number(document.getElementById('posicaoOrdem').value);
-
     for (let linha=0; linha<(canvas1.height); linha++) {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
 
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
             if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
                 const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
                 const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
@@ -1212,6 +1222,95 @@ suavConserv.addEventListener ('click', function() {
     canvasResult.style.height = 'auto';
 });
 
+/*------------------------------FILTRO GAUSSIANO-----------------------------------*/
+gaussiano.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    const desvio = Number(document.getElementById('desvio').value);
+    console.log(desvio);
+
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+
+            /*--*--*--*--KERNEL 3X3--*--*--*--*/
+            const kcimaEsq = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(-1*-1 + -1*-1) / (2 * desvio*desvio))));
+            const kcima = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(-1*-1 + 0*0) / (2 * desvio*desvio))));
+            const kcimaDir = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(-1*-1 + 1*1) / (2 * desvio*desvio))));
+            const kesquerda = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(0*0 + -1*-1) / (2 * desvio*desvio))));
+            const kidx = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(0*0 + 0*0) / (2 * desvio*desvio))));
+            const kdireita = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(0*0 + 1*1) / (2 * desvio*desvio))));
+            const kbaixoEsq = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(1*1 + -1*-1) / (2 * desvio*desvio))));
+            const kbaixo = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(1*1 + 0*0) / (2 * desvio*desvio))));
+            const kbaixoDir = ((1/(2 * Math.PI * (desvio*desvio))) * Math.exp((-(1*1 + 1*1) / (2 * desvio*desvio))));
+
+            const soma = kcimaEsq + kcima + kcimaDir + kesquerda + kidx + kdireita + kbaixoEsq + kbaixo + kbaixoDir;
+
+            const kcimaEsq_norm = kcimaEsq / soma;
+            const kcima_norm = kcima / soma;
+            const kcimaDir_norm = kcimaDir / soma;
+            const kesquerda_norm = kesquerda / soma;
+            const kidx_norm = kidx / soma;
+            const kdireita_norm = kdireita / soma;
+            const kbaixoEsq_norm = kbaixoEsq / soma;
+            const kbaixo_norm = kbaixo / soma;
+            const kbaixoDir_norm = kbaixoDir / soma;
+
+            if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                const novoR = 
+                Math.min(
+                Math.max(
+                pixels1[cimaEsq] * kcimaEsq_norm +
+                pixels1[cima] * kcima_norm +
+                pixels1[cimaDir] * kcimaDir_norm +
+                pixels1[esquerda] * kesquerda_norm +
+                pixels1[idx] * kidx_norm +
+                pixels1[direita] * kdireita_norm +
+                pixels1[baixoEsq] * kbaixoEsq_norm +
+                pixels1[baixo] * kbaixo_norm +
+                pixels1[baixoDir] * kbaixoDir_norm
+                , 0)
+                , 255);
+
+                pixelsResult[idx] = novoR;
+                pixelsResult[idx+1] = novoR;
+                pixelsResult[idx+2] = novoR;
+            }
+            pixelsResult[idx+3] = 255;
+        }
+    }
+
+    processarBorda(canvas1.height, canvas1.width, pixelsResult);
+
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
+
 /*-----------------------------------UPLOAD---------------------------------------*/
 const carregarImagens = document.querySelectorAll('.carregarImagem');
 
@@ -1255,6 +1354,7 @@ carregarImagens.forEach(input => {
 const constante = document.getElementById('constante');
 const blendfactor = document.getElementById('blendfactor');
 const posicaoOrdem = document.getElementById('blendfactor');
+const desvio = document.getElementById('desvio');
 
 function ajustarValor(a) {
     let valor = parseFloat(a.value);
@@ -1285,6 +1385,10 @@ posicaoOrdem.addEventListener('blur', function(){
     ajustarValor(posicaoOrdem)
 });
 
+desvio.addEventListener('blur', function(){
+    ajustarValor(desvio)
+});
+
 // Atualiza valor quando apertar Enter
 constante.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
@@ -1299,6 +1403,12 @@ blendfactor.addEventListener('keypress', function(e) {
 posicaoOrdem.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
         ajustarValor(posicaoOrdem);
+    }
+});
+
+desvio.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        ajustarValor(desvio);
     }
 });
 
