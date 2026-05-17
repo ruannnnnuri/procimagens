@@ -22,6 +22,8 @@ const realceMin = document.getElementById('realceMin');
 const realceMean = document.getElementById('realceMean');
 const mediana = document.getElementById('mediana');
 const ordem = document.getElementById('ordem');
+const suavConserv = document.getElementById('suavConserv');
+const gaussiano = document.getElementById('gaussiano');
 
 /*-----------------------------------ADICAO---------------------------------------*/
 adicao.addEventListener ('click', function() {
@@ -1099,18 +1101,103 @@ ordem.addEventListener ('click', function() {
                 ].sort((a, b) => a - b);
 
                 const listaG = [
-                    pixels1[idx], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                    pixels1[idx+1], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
                     pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
                 ].sort((a, b) => a - b);
 
                 const listaB = [
-                    pixels1[idx], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                    pixels1[idx+2], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
                     pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
                 ].sort((a, b) => a - b);
 
                 pixelsResult[idx] = listaR[posicaoOrdem];
                 pixelsResult[idx+1] = listaG[posicaoOrdem];
                 pixelsResult[idx+2] = listaB[posicaoOrdem];
+            }
+            pixelsResult[idx+3] = 255;
+        }
+    }
+
+    processarBorda(canvas1.height, canvas1.width, pixelsResult);
+
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
+
+/*------------------------------ORDEM-----------------------------------*/
+suavConserv.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    const posicaoOrdem = Number(document.getElementById('posicaoOrdem').value);
+
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+
+            if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                const listaR = [
+                    pixels1[idx], pixels1[cima], pixels1[baixo], pixels1[esquerda], pixels1[direita],
+                    pixels1[cimaEsq], pixels1[cimaDir], pixels1[baixoEsq], pixels1[baixoDir]
+                ].sort((a, b) => a - b);
+
+                const listaG = [
+                    pixels1[idx+1], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                    pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
+                ].sort((a, b) => a - b);
+
+                const listaB = [
+                    pixels1[idx+2], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                    pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
+                ].sort((a, b) => a - b);
+
+                if(pixels1[idx] <= listaR[0]){
+                    pixelsResult[idx] = listaR[0];
+                }else if(pixels1[idx] >= listaR[8]){
+                    pixelsResult[idx] = listaR[8];
+                }else{
+                    pixelsResult[idx] = pixels1[idx];
+                };
+
+                if(pixels1[idx+1] <= listaG[0]){
+                    pixelsResult[idx+1] = listaR[0];
+                }else if(pixels1[idx+1] >= listaG[8]){
+                    pixelsResult[idx+1] = listaG[8];
+                }else{
+                    pixelsResult[idx+1] = pixels1[idx+1];
+                };
+
+                if(pixels1[idx+2] <= listaB[0]){
+                    pixelsResult[idx+2] = listaB[0];
+                }else if(pixels1[idx+2] >= listaB[8]){
+                    pixelsResult[idx+2] = listaB[8];
+                }else{
+                    pixelsResult[idx+2] = pixels1[idx+2];
+                };
             }
             pixelsResult[idx+3] = 255;
         }
