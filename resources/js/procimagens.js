@@ -1333,6 +1333,18 @@ prewitt.addEventListener ('click', function() {
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
+    const checkCinza = document.getElementById('checkCinza');
+
+    if(checkCinza.checked){
+        for (let i=0; i<pixels1.length; i+=4) {
+            const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+            pixels1[i] = convercao;
+            pixels1[i+1] = convercao;
+            pixels1[i+2] = convercao;
+            pixels1[i+3] = 255;
+        }
+    }
+
     const aplicarMediana = document.getElementById('checkMediana');
 
     if(aplicarMediana.checked){
@@ -1477,6 +1489,18 @@ sobel.addEventListener ('click', function() {
     
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
+
+    const checkCinza = document.getElementById('checkCinza');
+
+    if(checkCinza.checked){
+        for (let i=0; i<pixels1.length; i+=4) {
+            const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+            pixels1[i] = convercao;
+            pixels1[i+1] = convercao;
+            pixels1[i+2] = convercao;
+            pixels1[i+3] = 255;
+        }
+    }
 
     const aplicarMediana = document.getElementById('checkMediana');
 
@@ -1623,12 +1647,59 @@ laplaciano.addEventListener ('click', function() {
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
-    for (let i=0; i<pixels1.length; i+=4) {
-        const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
-        pixels1[i] = convercao;
-        pixels1[i+1] = convercao;
-        pixels1[i+2] = convercao;
-        pixels1[i+3] = 255;
+    const checkCinza = document.getElementById('checkCinza');
+
+    if(checkCinza.checked){
+        for (let i=0; i<pixels1.length; i+=4) {
+            const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+            pixels1[i] = convercao;
+            pixels1[i+1] = convercao;
+            pixels1[i+2] = convercao;
+            pixels1[i+3] = 255;
+        }
+    }
+
+    const aplicarMediana = document.getElementById('checkMediana');
+
+    if(aplicarMediana.checked){
+        for (let linha=0; linha<(canvas1.height); linha++) {
+            for (let coluna=0; coluna<(canvas1.width); coluna++) {
+                const idx = ((linha * canvas1.width + coluna) * 4);
+
+
+                /*--*--*--*--KERNEL 3X3--*--*--*--*/
+                if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                    const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                    const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                    const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                    const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                    const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                    const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                    const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                    const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                    const listaR = [
+                        pixels1[idx], pixels1[cima], pixels1[baixo], pixels1[esquerda], pixels1[direita],
+                        pixels1[cimaEsq], pixels1[cimaDir], pixels1[baixoEsq], pixels1[baixoDir]
+                    ].sort((a, b) => a - b);
+
+                    const listaG = [
+                        pixels1[idx], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                        pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
+                    ].sort((a, b) => a - b);
+
+                    const listaB = [
+                        pixels1[idx], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                        pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
+                    ].sort((a, b) => a - b);
+
+                    pixels1[idx] = listaR[4];
+                    pixels1[idx+1] = listaG[4];
+                    pixels1[idx+2] = listaB[4];
+                }
+                pixels1[idx+3] = 255;
+            }
+        }
     }
 
     for (let linha=0; linha<(canvas1.height); linha++) {
@@ -1645,17 +1716,29 @@ laplaciano.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                const LF = 
+                const LaplR = 
                     (pixels1[cimaEsq] * 1 + pixels1[esquerda] * 1 + pixels1[baixoEsq] * 1 + 
                      pixels1[cima] * 1 + pixels1[idx] * -8 + pixels1[baixo] * 1 +
                      pixels1[cimaDir] * 1 + pixels1[direita] * 1 + pixels1[baixoDir] * 1)
                 ;
+                const LaplG = 
+                    (pixels1[cimaEsq+1] * 1 + pixels1[esquerda+1] * 1 + pixels1[baixoEsq+1] * 1 + 
+                     pixels1[cima+1] * 1 + pixels1[idx+1] * -8 + pixels1[baixo+1] * 1 +
+                     pixels1[cimaDir+1] * 1 + pixels1[direita+1] * 1 + pixels1[baixoDir+1] * 1)
+                ;
+                const LaplB = 
+                    (pixels1[cimaEsq+2] * 1 + pixels1[esquerda+2] * 1 + pixels1[baixoEsq+2] * 1 + 
+                     pixels1[cima+2] * 1 + pixels1[idx+2] * -8 + pixels1[baixo+2] * 1 +
+                     pixels1[cimaDir+2] * 1 + pixels1[direita+2] * 1 + pixels1[baixoDir+2] * 1)
+                ;
 
-                const valorF = Math.max(Math.min(Math.abs(LF), 255), 0);
+                const valorR = Math.max(Math.min(Math.abs(LaplR), 255), 0);
+                const valorG = Math.max(Math.min(Math.abs(LaplG), 255), 0);
+                const valorB = Math.max(Math.min(Math.abs(LaplB), 255), 0);
 
-                pixelsResult[idx] = valorF;
-                pixelsResult[idx+1] = valorF;
-                pixelsResult[idx+2] = valorF;
+                pixelsResult[idx] = valorR;
+                pixelsResult[idx+1] = valorG;
+                pixelsResult[idx+2] = valorB;
 
             }
             pixelsResult[idx+3] = 255;
