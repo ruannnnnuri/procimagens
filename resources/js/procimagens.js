@@ -1333,6 +1333,49 @@ prewitt.addEventListener ('click', function() {
     const pixels1 = imageData1.data;
     const pixelsResult = imageDataResult.data;
 
+    const aplicarMediana = document.getElementById('checkMediana');
+
+    if(aplicarMediana.checked){
+        for (let linha=0; linha<(canvas1.height); linha++) {
+            for (let coluna=0; coluna<(canvas1.width); coluna++) {
+                const idx = ((linha * canvas1.width + coluna) * 4);
+
+
+                /*--*--*--*--KERNEL 3X3--*--*--*--*/
+                if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                    const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                    const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                    const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                    const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                    const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                    const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                    const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                    const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                    const listaR = [
+                        pixels1[idx], pixels1[cima], pixels1[baixo], pixels1[esquerda], pixels1[direita],
+                        pixels1[cimaEsq], pixels1[cimaDir], pixels1[baixoEsq], pixels1[baixoDir]
+                    ].sort((a, b) => a - b);
+
+                    const listaG = [
+                        pixels1[idx], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                        pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
+                    ].sort((a, b) => a - b);
+
+                    const listaB = [
+                        pixels1[idx], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                        pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
+                    ].sort((a, b) => a - b);
+
+                    pixels1[idx] = listaR[4];
+                    pixels1[idx+1] = listaG[4];
+                    pixels1[idx+2] = listaB[4];
+                }
+                pixels1[idx+3] = 255;
+            }
+        }
+    }
+
     for (let linha=0; linha<(canvas1.height); linha++) {
         for (let coluna=0; coluna<(canvas1.width); coluna++) {
             const idx = ((linha * canvas1.width + coluna) * 4);
@@ -1383,13 +1426,236 @@ prewitt.addEventListener ('click', function() {
                      pixels1[cimaDir+2] * 1 + pixels1[direita+2] * 0 + pixels1[baixoDir+2] * -1)
                 ;
 
-                const valorR = Math.sqrt(GxR * GxR + GyR * GyR);
-                const valorG = Math.sqrt(GxG * GxG + GyG * GyG);
-                const valorB = Math.sqrt(GxB * GxB + GyB * GyB);
+                let valorR = 0;
+                let valorG = 0;
+                let valorB = 0;
 
+                if(radioFinal.checked){
+                    valorR = Math.sqrt(GxR * GxR + GyR * GyR);
+                    valorG = Math.sqrt(GxG * GxG + GyG * GyG);
+                    valorB = Math.sqrt(GxB * GxB + GyB * GyB);
+                }else if(radioX.checked){
+                    valorR = Math.max(Math.min(Math.abs(GxR), 255), 0);
+                    valorG = Math.max(Math.min(Math.abs(GxG), 255), 0);
+                    valorB = Math.max(Math.min(Math.abs(GxB), 255), 0);
+                } else if(radioY.checked){
+                    valorR = Math.max(Math.min(Math.abs(GyR), 255), 0);
+                    valorG = Math.max(Math.min(Math.abs(GyG), 255), 0);
+                    valorB = Math.max(Math.min(Math.abs(GyB), 255), 0);
+                }
                 pixelsResult[idx] = valorR;
                 pixelsResult[idx+1] = valorG;
                 pixelsResult[idx+2] = valorB;
+
+            }
+            pixelsResult[idx+3] = 255;
+        }
+    }
+
+    processarBorda(canvas1.height, canvas1.width, pixelsResult);
+
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-----------------------------------SOBEL----------------------------------------*/
+sobel.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    const aplicarMediana = document.getElementById('checkMediana');
+
+    if(aplicarMediana.checked){
+        for (let linha=0; linha<(canvas1.height); linha++) {
+            for (let coluna=0; coluna<(canvas1.width); coluna++) {
+                const idx = ((linha * canvas1.width + coluna) * 4);
+
+
+                /*--*--*--*--KERNEL 3X3--*--*--*--*/
+                if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                    const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                    const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                    const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                    const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                    const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                    const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                    const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                    const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                    const listaR = [
+                        pixels1[idx], pixels1[cima], pixels1[baixo], pixels1[esquerda], pixels1[direita],
+                        pixels1[cimaEsq], pixels1[cimaDir], pixels1[baixoEsq], pixels1[baixoDir]
+                    ].sort((a, b) => a - b);
+
+                    const listaG = [
+                        pixels1[idx], pixels1[cima+1], pixels1[baixo+1], pixels1[esquerda+1], pixels1[direita+1],
+                        pixels1[cimaEsq+1], pixels1[cimaDir+1], pixels1[baixoEsq+1], pixels1[baixoDir+1]
+                    ].sort((a, b) => a - b);
+
+                    const listaB = [
+                        pixels1[idx], pixels1[cima+2], pixels1[baixo+2], pixels1[esquerda+2], pixels1[direita+2],
+                        pixels1[cimaEsq+2], pixels1[cimaDir+2], pixels1[baixoEsq+2], pixels1[baixoDir+2]
+                    ].sort((a, b) => a - b);
+
+                    pixels1[idx] = listaR[4];
+                    pixels1[idx+1] = listaG[4];
+                    pixels1[idx+2] = listaB[4];
+                }
+                pixels1[idx+3] = 255;
+            }
+        }
+    }
+
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+
+            if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                const GxR = 
+                    (pixels1[cimaEsq] * 1 + pixels1[esquerda] * 2 + pixels1[baixoEsq] * 1 + 
+                     pixels1[cima] * 0 + pixels1[idx] * 0 + pixels1[baixo] * 0 +
+                     pixels1[cimaDir] * -1 + pixels1[direita] * -2 + pixels1[baixoDir] * -1)
+                ;
+
+                const GxG =
+                    (pixels1[cimaEsq+1] * 1 + pixels1[esquerda+1] * 2 + pixels1[baixoEsq+1] * 1 + 
+                     pixels1[cima+1] * 0 + pixels1[idx+1] * 0 + pixels1[baixo+1] * 0 +
+                     pixels1[cimaDir+1] * -1 + pixels1[direita+1] * -2 + pixels1[baixoDir+1] * -1)
+                ;
+
+                const GxB =
+                    (pixels1[cimaEsq+2] * 1 + pixels1[esquerda+2] * 2 + pixels1[baixoEsq+2] * 1 + 
+                     pixels1[cima+2] * 0 + pixels1[idx+2] * 0 + pixels1[baixo+2] * 0 +
+                     pixels1[cimaDir+2] * -1 + pixels1[direita+2] * -2 + pixels1[baixoDir+2] * -1)
+                ;
+
+                const GyR = 
+                    (pixels1[cimaEsq] * 1 + pixels1[esquerda] * 0 + pixels1[baixoEsq] * -1 + 
+                     pixels1[cima] * 2 + pixels1[idx] * 0 + pixels1[baixo] * -2 +
+                     pixels1[cimaDir] * 1 + pixels1[direita] * 0 + pixels1[baixoDir] * -1)
+                ;
+
+                const GyG =
+                    (pixels1[cimaEsq+1] * 1 + pixels1[esquerda+1] * 0 + pixels1[baixoEsq+1] * -1 + 
+                     pixels1[cima+1] * 2 + pixels1[idx+1] * 0 + pixels1[baixo+1] * -2 +
+                     pixels1[cimaDir+1] * 1 + pixels1[direita+1] * 0 + pixels1[baixoDir+1] * -1)
+                ;
+
+                const GyB =
+                    (pixels1[cimaEsq+2] * 1 + pixels1[esquerda+2] * 0 + pixels1[baixoEsq+2] * -1 + 
+                     pixels1[cima+2] * 2 + pixels1[idx+2] * 0 + pixels1[baixo+2] * -2 +
+                     pixels1[cimaDir+2] * 1 + pixels1[direita+2] * 0 + pixels1[baixoDir+2] * -1)
+                ;
+
+                let valorR = 0;
+                let valorG = 0;
+                let valorB = 0;
+
+                if(radioFinal.checked){
+                    valorR = Math.sqrt(GxR * GxR + GyR * GyR);
+                    valorG = Math.sqrt(GxG * GxG + GyG * GyG);
+                    valorB = Math.sqrt(GxB * GxB + GyB * GyB);
+                }else if(radioX.checked){
+                    valorR = Math.max(Math.min(Math.abs(GxR), 255), 0);
+                    valorG = Math.max(Math.min(Math.abs(GxG), 255), 0);
+                    valorB = Math.max(Math.min(Math.abs(GxB), 255), 0);
+                } else if(radioY.checked){
+                    valorR = Math.max(Math.min(Math.abs(GyR), 255), 0);
+                    valorG = Math.max(Math.min(Math.abs(GyG), 255), 0);
+                    valorB = Math.max(Math.min(Math.abs(GyB), 255), 0);
+                }
+                pixelsResult[idx] = valorR;
+                pixelsResult[idx+1] = valorG;
+                pixelsResult[idx+2] = valorB;
+
+            }
+            pixelsResult[idx+3] = 255;
+        }
+    }
+
+    processarBorda(canvas1.height, canvas1.width, pixelsResult);
+
+    ctxResult.putImageData(imageDataResult, 0, 0);
+
+    canvasResult.style.width = '100%';
+    canvasResult.style.maxWidth = '280px';
+    canvasResult.style.height = 'auto';
+});
+
+/*-----------------------------------LAPLACIANO----------------------------------------*/
+laplaciano.addEventListener ('click', function() {
+    const canvas1 = document.getElementById('img1Preview');
+    const canvasResult = document.getElementById('resultPreview');
+
+    canvasResult.width = canvas1.width;
+    canvasResult.height = canvas1.height;
+
+    const ctx1 = canvas1.getContext('2d');
+    const ctxResult = canvasResult.getContext('2d');
+    
+    const imageData1 = ctx1.getImageData(0, 0, canvas1.width, canvas1.height);
+    const imageDataResult = ctxResult.createImageData(canvas1.width, canvas1.height);
+    
+    const pixels1 = imageData1.data;
+    const pixelsResult = imageDataResult.data;
+
+    for (let i=0; i<pixels1.length; i+=4) {
+        const convercao = Math.floor((pixels1[i]+pixels1[i+1]+pixels1[i+2]) / 3);
+        pixels1[i] = convercao;
+        pixels1[i+1] = convercao;
+        pixels1[i+2] = convercao;
+        pixels1[i+3] = 255;
+    }
+
+    for (let linha=0; linha<(canvas1.height); linha++) {
+        for (let coluna=0; coluna<(canvas1.width); coluna++) {
+            const idx = ((linha * canvas1.width + coluna) * 4);
+
+            if(!(coluna === 0 || linha === 0 || coluna === canvas1.width - 1 || linha === canvas1.height - 1)){
+                const cimaEsq     = ((linha - 1) * canvas1.width + (coluna - 1)) * 4;
+                const esquerda    = (linha * canvas1.width + (coluna - 1)) * 4;
+                const baixoEsq    = ((linha + 1) * canvas1.width + (coluna - 1)) * 4;
+                const cima        = ((linha - 1) * canvas1.width + coluna) * 4;
+                const baixo       = ((linha + 1) * canvas1.width + coluna) * 4;
+                const cimaDir     = ((linha - 1) * canvas1.width + (coluna + 1)) * 4;
+                const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
+                const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
+
+                const LF = 
+                    (pixels1[cimaEsq] * 1 + pixels1[esquerda] * 1 + pixels1[baixoEsq] * 1 + 
+                     pixels1[cima] * 1 + pixels1[idx] * -8 + pixels1[baixo] * 1 +
+                     pixels1[cimaDir] * 1 + pixels1[direita] * 1 + pixels1[baixoDir] * 1)
+                ;
+
+                const valorF = Math.max(Math.min(Math.abs(LF), 255), 0);
+
+                pixelsResult[idx] = valorF;
+                pixelsResult[idx+1] = valorF;
+                pixelsResult[idx+2] = valorF;
 
             }
             pixelsResult[idx+3] = 255;
