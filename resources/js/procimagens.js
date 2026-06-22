@@ -30,6 +30,8 @@ const laplaciano = document.getElementById('laplaciano');
 const radioFinal = document.getElementById('radioFinal');
 const radioX = document.getElementById('radioX');
 const radioY = document.getElementById('radioY');
+const radio3x3 = document.getElementById('radio3x3');
+const radioCruz = document.getElementById('radioCruz');
 
 /*-----------------------------------ADICAO---------------------------------------*/
 adicao.addEventListener ('click', function() {
@@ -1816,14 +1818,27 @@ dilatacao.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255){
-                    pixelsResult[idx] = 255;
-                    pixelsResult[idx+1] = 255;
-                    pixelsResult[idx+2] = 255;
-                }else{
-                    pixelsResult[idx] = 0;
-                    pixelsResult[idx+1] = 0;
-                    pixelsResult[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255 ||
+                       pixels1[cimaEsq] === 255 || pixels1[cimaDir] === 255 || pixels1[baixoEsq] === 255 || pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
 
             }
@@ -1886,14 +1901,27 @@ erosao.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255){
-                    pixelsResult[idx] = 255;
-                    pixelsResult[idx+1] = 255;
-                    pixelsResult[idx+2] = 255;
-                }else{
-                    pixelsResult[idx] = 0;
-                    pixelsResult[idx+1] = 0;
-                    pixelsResult[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255 &&
+                       pixels1[cimaEsq] === 255 && pixels1[cimaDir] === 255 && pixels1[baixoEsq] === 255 && pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
 
             }
@@ -1958,14 +1986,27 @@ abertura.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255){
-                    pixelsInt[idx] = 255;
-                    pixelsInt[idx+1] = 255;
-                    pixelsInt[idx+2] = 255;
-                }else{
-                    pixelsInt[idx] = 0;
-                    pixelsInt[idx+1] = 0;
-                    pixelsInt[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255 &&
+                       pixels1[cimaEsq] === 255 && pixels1[cimaDir] === 255 && pixels1[baixoEsq] === 255 && pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
             }
             pixelsInt[idx+3] = 255;
@@ -1986,14 +2027,28 @@ abertura.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixelsInt[idx] === 255 || pixelsInt[cima] === 255 || pixelsInt[baixo] === 255 || pixelsInt[esquerda] === 255 || pixelsInt[direita] === 255){
-                    pixelsResult[idx] = 255;
-                    pixelsResult[idx+1] = 255;
-                    pixelsResult[idx+2] = 255;
-                }else{
-                    pixelsResult[idx] = 0;
-                    pixelsResult[idx+1] = 0;
-                    pixelsResult[idx+2] = 0;
+
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255 ||
+                       pixels1[cimaEsq] === 255 || pixels1[cimaDir] === 255 || pixels1[baixoEsq] === 255 || pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
             }
             pixelsResult[idx+3] = 255;
@@ -2057,14 +2112,27 @@ fechamento.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255){
-                    pixelsInt[idx] = 255;
-                    pixelsInt[idx+1] = 255;
-                    pixelsInt[idx+2] = 255;
-                }else{
-                    pixelsInt[idx] = 0;
-                    pixelsInt[idx+1] = 0;
-                    pixelsInt[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 || pixels1[cima] === 255 || pixels1[baixo] === 255 || pixels1[esquerda] === 255 || pixels1[direita] === 255 ||
+                       pixels1[cimaEsq] === 255 || pixels1[cimaDir] === 255 || pixels1[baixoEsq] === 255 || pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
             }
             pixelsInt[idx+3] = 255;
@@ -2085,14 +2153,27 @@ fechamento.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixelsInt[idx] === 255 && pixelsInt[cima] === 255 && pixelsInt[baixo] === 255 && pixelsInt[esquerda] === 255 && pixelsInt[direita] === 255){
-                    pixelsResult[idx] = 255;
-                    pixelsResult[idx+1] = 255;
-                    pixelsResult[idx+2] = 255;
-                }else{
-                    pixelsResult[idx] = 0;
-                    pixelsResult[idx+1] = 0;
-                    pixelsResult[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixels1[idx] === 255 && pixels1[cima] === 255 && pixels1[baixo] === 255 && pixels1[esquerda] === 255 && pixels1[direita] === 255 &&
+                       pixels1[cimaEsq] === 255 && pixels1[cimaDir] === 255 && pixels1[baixoEsq] === 255 && pixels1[baixoDir] === 255){
+                        pixelsResult[idx] = 255;
+                        pixelsResult[idx+1] = 255;
+                        pixelsResult[idx+2] = 255;
+                    }else{
+                        pixelsResult[idx] = 0;
+                        pixelsResult[idx+1] = 0;
+                        pixelsResult[idx+2] = 0;
+                    }
                 }
             }
             pixelsResult[idx+3] = 255;
@@ -2158,14 +2239,27 @@ contorno.addEventListener ('click', function() {
                 const direita     = (linha * canvas1.width + (coluna + 1)) * 4;
                 const baixoDir    = ((linha + 1) * canvas1.width + (coluna + 1)) * 4;
 
-                if(pixelsBin[idx] === 255 && pixelsBin[cima] === 255 && pixelsBin[baixo] === 255 && pixelsBin[esquerda] === 255 && pixelsBin[direita] === 255){
-                    pixelsInt[idx] = 255;
-                    pixelsInt[idx+1] = 255;
-                    pixelsInt[idx+2] = 255;
-                }else{
-                    pixelsInt[idx] = 0;
-                    pixelsInt[idx+1] = 0;
-                    pixelsInt[idx+2] = 0;
+                if(radioCruz.checked){
+                    if(pixelsBin[idx] === 255 && pixelsBin[cima] === 255 && pixelsBin[baixo] === 255 && pixelsBin[esquerda] === 255 && pixelsBin[direita] === 255){
+                        pixelsInt[idx] = 255;
+                        pixelsInt[idx+1] = 255;
+                        pixelsInt[idx+2] = 255;
+                    }else{
+                        pixelsInt[idx] = 0;
+                        pixelsInt[idx+1] = 0;
+                        pixelsInt[idx+2] = 0;
+                    }
+                }else if(radio3x3.checked){
+                    if(pixelsBin[idx] === 255 && pixelsBin[cima] === 255 && pixelsBin[baixo] === 255 && pixelsBin[esquerda] === 255 && pixelsBin[direita] === 255 &&
+                       pixelsBin[cimaEsq] === 255 && pixelsBin[cimaDir] === 255 && pixelsBin[baixoEsq] === 255 && pixelsBin[baixoDir] === 255){
+                        pixelsInt[idx] = 255;
+                        pixelsInt[idx+1] = 255;
+                        pixelsInt[idx+2] = 255;
+                    }else{
+                        pixelsInt[idx] = 0;
+                        pixelsInt[idx+1] = 0;
+                        pixelsInt[idx+2] = 0;
+                    }
                 }
             }
             pixelsInt[idx+3] = 255;
